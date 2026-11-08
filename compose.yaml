@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: natal
+      POSTGRES_PASSWORD: natal
+      POSTGRES_DB: site_natal
+    ports:
+      - "127.0.0.1:54329:5432"
+    volumes:
+      - natal_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U natal -d site_natal"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  natal_postgres:
