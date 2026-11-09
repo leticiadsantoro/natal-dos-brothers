@@ -656,6 +656,10 @@ form > .primary {
   }
 }
 @media (max-width: 600px) {
+  body {
+    margin: 0;
+    padding-top: 0;
+  }
   .art {
     overflow: hidden;
   }
