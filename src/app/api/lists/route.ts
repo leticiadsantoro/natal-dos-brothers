@@ -26,8 +26,15 @@ export async function POST(req: Request) {
     );
     for (const gift of data.gifts)
       await client.query(
-        "INSERT INTO gifts (id,list_id,title,image_url,image_credit) VALUES ($1,$2,$3,$4,$5)",
-        [randomUUID(), id, gift.title, gift.image_url, gift.image_credit],
+        "INSERT INTO gifts (id,list_id,title,image_url,image_credit,product_url) VALUES ($1,$2,$3,$4,$5,$6)",
+        [
+          randomUUID(),
+          id,
+          gift.title,
+          gift.image_url,
+          gift.image_credit,
+          gift.product_url,
+        ],
       );
     await client.query("COMMIT");
     return Response.json(rows[0], { status: 201 });

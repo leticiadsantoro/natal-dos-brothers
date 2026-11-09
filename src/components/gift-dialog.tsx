@@ -16,6 +16,7 @@ export function GiftDialog({
 }) {
   const router = useRouter();
   const [title, setTitle] = useState(gift?.title ?? ""),
+    [productUrl, setProductUrl] = useState(gift?.product_url ?? ""),
     [image, setImage] = useState<ImageChoice | null>(
       gift ? { url: gift.image_url, credit: gift.image_credit } : null,
     ),
@@ -38,6 +39,7 @@ export function GiftDialog({
           title: title.trim(),
           image_url: image.url,
           image_credit: image.credit,
+          product_url: productUrl.trim() || null,
         }),
       );
       onClose();
@@ -82,6 +84,17 @@ export function GiftDialog({
               placeholder="Ex.: Fone de ouvido vermelho"
               required
               maxLength={150}
+            />
+            <label htmlFor="gift-link">Link do presente (opcional)</label>
+            <input
+              id="gift-link"
+              type="url"
+              inputMode="url"
+              value={productUrl}
+              onChange={(e) => setProductUrl(e.target.value)}
+              placeholder="https://www.loja.com.br/produto"
+              maxLength={2048}
+              autoComplete="url"
             />
             <ImagePicker
               value={image}

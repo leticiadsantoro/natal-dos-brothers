@@ -38,7 +38,13 @@ test("fluxo completo: listas, fotos, presentes, edição pública e exclusão", 
       json("POST", {
         title: "Teste temporário de Natal",
         photo_url: image,
-        gifts: [{ title: "Livro inicial", image_url: image }],
+        gifts: [
+          {
+            title: "Livro inicial",
+            image_url: image,
+            product_url: "https://example.com/livro",
+          },
+        ],
       }),
     );
     assert.equal(result.status, 201);
@@ -47,6 +53,7 @@ test("fluxo completo: listas, fotos, presentes, edição pública e exclusão", 
     let detail = await call("/api/lists/" + list.id);
     assert.equal(detail.data.title, "Teste temporário de Natal");
     assert.equal(detail.data.gifts.length, 1);
+    assert.equal(detail.data.gifts[0].product_url, "https://example.com/livro");
     assert.equal(detail.data.photo_url, image);
     const all = await call("/api/lists");
     assert.equal(all.data.find((l) => l.id === list.id).gift_count, 1);
@@ -58,15 +65,24 @@ test("fluxo completo: listas, fotos, presentes, edição pública e exclusão", 
     assert.equal(renamed.data.photo_url, null);
     const added = await call(
       "/api/lists/" + list.id + "/gifts",
-      json("POST", { title: "Tênis vermelho", image_url: image }),
+      json("POST", {
+        title: "Tênis vermelho",
+        image_url: image,
+        product_url: "https://example.com/tenis",
+      }),
     );
     assert.equal(added.status, 201);
     const changed = await call(
       "/api/gifts/" + added.data.id,
-      json("PATCH", { title: "Fone de ouvido", image_url: image }),
+      json("PATCH", {
+        title: "Fone de ouvido",
+        image_url: image,
+        product_url: "https://example.com/fone",
+      }),
     );
     assert.equal(changed.status, 200);
     assert.equal(changed.data.title, "Fone de ouvido");
+    assert.equal(changed.data.product_url, "https://example.com/fone");
     // Outra requisição, sem cookies ou autenticação, lê a alteração persistida.
     detail = await call("/api/lists/" + list.id);
     assert.equal(detail.data.gifts.length, 2);
@@ -79,6 +95,33 @@ test("fluxo completo: listas, fotos, presentes, edição pública e exclusão", 
     const html = await page.text();
     assert.ok(html.includes("Amiga de Natal"));
     assert.ok(html.includes("Fone de ouvido"));
+    assert.ok(html.includes('href="https://example.com/fone"'));
+    assert.ok(html.includes("Comprar presente"));
+    const cleared = await call(
+      "/api/gifts/" + added.data.id,
+      json("PATCH", {
+        title: "Fone de ouvido",
+        image_url: image,
+        product_url: "  ",
+      }),
+    );
+    assert.equal(cleared.status, 200);
+    assert.equal(cleared.data.product_url, null);
+    for (const unsafe of [
+      "javascript:alert(1)",
+      "data:text/html,test",
+      "https://user:password@example.com/",
+    ]) {
+      const invalid = await call(
+        "/api/gifts/" + added.data.id,
+        json("PATCH", {
+          title: "Fone de ouvido",
+          image_url: image,
+          product_url: unsafe,
+        }),
+      );
+      assert.equal(invalid.status, 400);
+    }
     const removed = await call("/api/gifts/" + added.data.id, {
       method: "DELETE",
     });

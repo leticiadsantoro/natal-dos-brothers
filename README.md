@@ -31,7 +31,8 @@ Para outro PostgreSQL, ajuste `DATABASE_URL` em `.env` e rode `npm run db:migrat
 - Página `/listas/[id]` com a mesma arte/cabeçalho e rodapé, e presentes em grade de catálogo.
 - Botão **Criar minha lista de presentes**, com nome e foto opcional da pessoa. Os presentes são adicionados na página da lista.
 - Alteração do nome e foto da lista (foto por upload, com opção de remover).
-- Adição e edição dos dois dados de cada presente: título e imagem.
+- Adição e edição de título, imagem e link opcional de cada presente.
+- Botão **Comprar presente** abre o link em uma nova aba, quando informado.
 - Exclusão de presentes com confirmação; cancelar mantém o presente.
 - Botão para excluir uma lista e todos os seus presentes, com confirmação e retorno à página inicial.
 - Imagem por upload ou busca no Wikimedia Commons, sem chave de API.
@@ -56,6 +57,10 @@ Para outro PostgreSQL, ajuste `DATABASE_URL` em `.env` e rode `npm run db:migrat
 A busca consulta https://commons.wikimedia.org/w/api.php (documentação: https://www.mediawiki.org/wiki/API:Imageinfo). A disponibilidade e relevância dependem do Commons; há estados de erro e resultado vazio, e o upload continua disponível. Termos em inglês costumam ampliar as opções. As URLs pesquisadas são externas, com atribuição persistida.
 
 O acesso aberto é intencional. Não há contas, autenticação nem controle por proprietário. Os nomes são títulos das listas; pessoas com nomes iguais podem criar listas distintas, identificadas por UUID.
+
+## Atualização do banco
+
+Execute `npm run db:migrate` antes de iniciar a versão atualizada. O schema adiciona a coluna opcional `product_url` sem alterar os presentes existentes. Na Vercel, mantenha o Build Command `npm run db:migrate && npm run build`.
 
 ## Verificação
 

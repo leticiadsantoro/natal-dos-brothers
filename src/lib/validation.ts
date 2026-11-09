@@ -29,10 +29,31 @@ export const credit = z
   })
   .nullable()
   .default(null);
+export const productUrl = z
+  .string()
+  .trim()
+  .max(2048)
+  .refine((value) => {
+    if (!value) return true;
+    try {
+      const url = new URL(value);
+      return (
+        ["https:", "http:"].includes(url.protocol) &&
+        !url.username &&
+        !url.password
+      );
+    } catch {
+      return false;
+    }
+  }, "Informe um link válido começando com https:// ou http://.")
+  .transform((value) => value || null)
+  .nullable()
+  .default(null);
 export const giftInput = z.object({
   title: z.string().trim().min(1, "Informe o título.").max(150),
   image_url: imageUrl,
   image_credit: credit,
+  product_url: productUrl,
 });
 export const listInput = z.object({
   title: z.string().trim().min(1, "Informe o nome.").max(80),

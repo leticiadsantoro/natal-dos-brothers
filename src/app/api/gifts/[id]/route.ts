@@ -7,8 +7,8 @@ export async function PATCH(req: Request, ctx: Context) {
     const id = uuid.parse((await ctx.params).id);
     const data = giftInput.parse(await body(req));
     const { rows } = await pool.query(
-      "UPDATE gifts SET title=$2,image_url=$3,image_credit=$4,updated_at=now() WHERE id=$1 RETURNING *",
-      [id, data.title, data.image_url, data.image_credit],
+      "UPDATE gifts SET title=$2,image_url=$3,image_credit=$4,product_url=$5,updated_at=now() WHERE id=$1 RETURNING *",
+      [id, data.title, data.image_url, data.image_credit, data.product_url],
     );
     if (!rows[0]) throw new HttpError(404, "Presente não encontrado.");
     return Response.json(rows[0]);

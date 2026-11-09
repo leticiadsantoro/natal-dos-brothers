@@ -5,6 +5,7 @@ export type Gift = {
   title: string;
   image_url: string;
   image_credit: Credit | null;
+  product_url: string | null;
 };
 export type GiftList = {
   id: string;

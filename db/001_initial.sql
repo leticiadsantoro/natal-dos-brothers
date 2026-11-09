@@ -22,4 +22,5 @@ CREATE TABLE IF NOT EXISTS gifts (
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS gifts_list_id_idx ON gifts(list_id);
+ALTER TABLE gifts ADD COLUMN IF NOT EXISTS product_url text;
 COMMIT;

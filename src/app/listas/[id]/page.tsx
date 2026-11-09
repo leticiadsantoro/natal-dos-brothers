@@ -17,7 +17,7 @@ export default async function ListPage({
   );
   if (!rows[0]) notFound();
   const { rows: gifts } = await pool.query<Gift>(
-    "SELECT id,list_id,title,image_url,image_credit FROM gifts WHERE list_id=$1 ORDER BY created_at,id",
+    "SELECT id,list_id,title,image_url,image_credit,product_url FROM gifts WHERE list_id=$1 ORDER BY created_at,id",
     [id],
   );
   return <ListContent list={rows[0]} gifts={gifts} />;

@@ -83,6 +83,19 @@ export function ListContent({
                       </a>
                     </p>
                   )}
+                  {g.product_url && (
+                    <a
+                      className="primary wide gift-buy"
+                      href={g.product_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={
+                        "Comprar presente: " + g.title + " (abre em nova aba)"
+                      }
+                    >
+                      Comprar presente <span aria-hidden="true">↗</span>
+                    </a>
+                  )}
                   <button className="outline wide" onClick={() => setEditor(g)}>
                     Editar presente
                   </button>

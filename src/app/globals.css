@@ -1011,3 +1011,14 @@ form > .primary {
   height: 200px;
   border: 0;
 }
+
+.product .gift-buy {
+  display: block;
+  margin-top: auto;
+  margin-bottom: 10px;
+  text-align: center;
+  text-decoration: none;
+}
+.product .gift-buy + .outline {
+  margin-top: 0;
+}
